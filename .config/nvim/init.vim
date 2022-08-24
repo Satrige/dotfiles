@@ -3,6 +3,14 @@ call plug#begin('~/.local/share/nvim/plugged')
   Plug 'scrooloose/nerdtree'
   Plug 'vim-airline/vim-airline'
   Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
+  Plug 'neoclide/coc-tsserver', {'do': 'yarn install --frozen-lockfile'}
+  let g:coc_global_extensions = [
+      \ 'coc-sh',
+      \ 'coc-json',
+      \ 'coc-eslint',
+      \ 'coc-highlight',
+      \ 'coc-docker',
+      \]
 call plug#end()
 
 set termguicolors                " recommended
