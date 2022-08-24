@@ -1,7 +1,9 @@
 # dotfiles
 
 
-## Install font for oh-my-zsh theme Agnoster
+## Zsh plugins
+
+### Install font for oh-my-zsh theme Agnoster
 
 ```
 sudo apt-get install fonts-powerline
@@ -9,7 +11,7 @@ sudo apt-get install fonts-powerline
 
 [Full link](https://github.com/agnoster/agnoster-zsh-theme)
 
-## Install plugin zsh-autosuggestions for zsh
+### Install plugin zsh-autosuggestions for zsh
 
 ```
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
@@ -19,6 +21,21 @@ plugins=(
     zsh-autosuggestions
 )
 ```
+
+### Install zsh-kubectl-prompt
+
+Clone the repo into oh-my-zsh custom plugins folder
+```
+git clone https://github.com/superbrothers/zsh-kubectl-prompt.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-kubectl-prompt
+```
+
+Configure your prompt (or check how to customize the theme plugin you are using)
+```
+git clone https://github.com/superbrothers/zsh-kubectl-prompt.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-kubectl-prompt
+```
+
+
+
 
 ## Install the Vim-plug Plugin Manager ([full link](https://www.linode.com/docs/guides/how-to-install-neovim-and-plugins-with-vim-plug/))
 
