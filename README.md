@@ -31,7 +31,7 @@ git clone https://github.com/superbrothers/zsh-kubectl-prompt.git ${ZSH_CUSTOM:-
 
 Configure your prompt (or check how to customize the theme plugin you are using)
 ```
-git clone https://github.com/superbrothers/zsh-kubectl-prompt.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-kubectl-prompt
+RPROMPT='%{$fg[blue]%}($ZSH_KUBECTL_PROMPT)%{$reset_color%}'
 ```
 
 
