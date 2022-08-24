@@ -9,6 +9,17 @@ sudo apt-get install fonts-powerline
 
 [Full link](https://github.com/agnoster/agnoster-zsh-theme)
 
+## Install plugin zsh-autosuggestions for zsh
+
+```
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+plugins=( 
+    # other plugins...
+    zsh-autosuggestions
+)
+```
+
 ## Install the Vim-plug Plugin Manager ([full link](https://www.linode.com/docs/guides/how-to-install-neovim-and-plugins-with-vim-plug/))
 
 To make it easier to install plugins, use the Vim-plug plugin manager. This plugin manager uses git to manage most plugins:
