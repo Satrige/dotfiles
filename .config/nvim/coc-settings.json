@@ -1,0 +1,8 @@
+{
+  "eslint.autoFixOnSave": true,
+  "eslint.alwaysShowStatus": true,
+  "eslint.trace.server": "verbose",
+  "coc.preferences.formatOnSaveFiletypes": ["js"],
+  "typescript.suggestionActions.enabled": false,
+  "javascript.suggestionActions.enabled": false
+}
