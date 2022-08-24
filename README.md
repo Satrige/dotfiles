@@ -11,6 +11,19 @@ sudo apt-get install fonts-powerline
 
 [Full link](https://github.com/agnoster/agnoster-zsh-theme)
 
+### Install plugin zsh-completions
+
+
+Clone the repository inside your oh-my-zsh repo:
+```
+git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions
+```
+
+Add it to FPATH in your .zshrc by adding the following line before source "$ZSH/oh-my-zsh.sh":
+```
+fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
+```
+
 ### Install plugin zsh-autosuggestions for zsh
 
 ```
