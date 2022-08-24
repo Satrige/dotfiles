@@ -1,5 +1,7 @@
 call plug#begin('~/.local/share/nvim/plugged')
   Plug 'KeitaNakamura/neodark.vim' " vim-plug
+  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+  Plug 'junegunn/fzf.vim'
   Plug 'scrooloose/nerdtree'
   Plug 'vim-airline/vim-airline'
   Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
@@ -35,3 +37,10 @@ autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTr
 
 " Open the existing NERDTree on each new tab.
 autocmd BufWinEnter * if getcmdwintype() == '' | silent NERDTreeMirror | endif
+
+"                              Bindings
+
+
+" Binding of Fuzzy Findings
+nnoremap <C-f> :FZF<CR>
+nnoremap <silent> <Leader>f :Rg<CR>
