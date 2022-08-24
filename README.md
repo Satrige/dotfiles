@@ -1,5 +1,14 @@
 # dotfiles
 
+
+## Install font for oh-my-zsh theme Agnoster
+
+```
+sudo apt-get install fonts-powerline
+```
+
+[Full link](https://github.com/agnoster/agnoster-zsh-theme)
+
 ## Install the Vim-plug Plugin Manager ([full link](https://www.linode.com/docs/guides/how-to-install-neovim-and-plugins-with-vim-plug/))
 
 To make it easier to install plugins, use the Vim-plug plugin manager. This plugin manager uses git to manage most plugins:
