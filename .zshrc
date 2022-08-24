@@ -9,6 +9,9 @@ plugins=(
   docker
   docker-compose
   kubectl
+  zsh-autosuggestions
+  zsh-completions
+  zsh-kubectl-prompt
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -36,3 +39,5 @@ alias vim="nvim"
 alias k="kubectl"
 
 source <(kubectl completion zsh)
+
+RPROMPT='%{$fg[blue]%}($ZSH_KUBECTL_PROMPT)%{$reset_color%}'
