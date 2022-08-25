@@ -48,7 +48,21 @@ RPROMPT='%{$fg[blue]%}($ZSH_KUBECTL_PROMPT)%{$reset_color%}'
 ```
 
 
+## Install search engines
 
+### FZF
+
+```
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+~/.fzf/install
+```
+
+### Ripgrep
+
+```
+curl -LO https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep_13.0.0_amd64.deb
+sudo dpkg -i ripgrep_13.0.0_amd64.deb
+```
 
 ## Install the Vim-plug Plugin Manager ([full link](https://www.linode.com/docs/guides/how-to-install-neovim-and-plugins-with-vim-plug/))
 
