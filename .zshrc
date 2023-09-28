@@ -45,7 +45,20 @@ alias grb="git rebase origin/master"
 alias gp="git push origin"                                                                                                  
 alias gpf="git push --force origin"                                                                                         
 alias gco="git checkout"                                                                                                    
-alias gcm="git commit -m"                                                                                                   
+alias gcm="git commit -m"
+
+git_create_branch() {
+    local branch_name="$1"
+    if [ -z "$branch_name" ]; then
+        echo "Usage: create_git_branch <branch_name>"
+        return 1
+    fi
+
+    git checkout -b "$branch_name"
+    git push --set-upstream origin "$branch_name"
+}
+
+alias gcb="git_create_branch"
                                                                                                                             
 source <(kubectl completion zsh)                                                                                            
                                                                                                                             
