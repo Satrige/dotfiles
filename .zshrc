@@ -59,6 +59,16 @@ git_create_branch() {
 }
 
 alias gcb="git_create_branch"
+
+git_push_current_branch() {
+    # Get the current branch name
+    branch_name=$(git rev-parse --abbrev-ref HEAD)
+    
+    # Push the current branch with the -u flag
+    git push -u origin "$branch_name"
+}
+
+alias gpuo="git_push_current_branch"
                                                                                                                             
 source <(kubectl completion zsh)                                                                                            
                                                                                                                             
