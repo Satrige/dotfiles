@@ -9,11 +9,11 @@ call plug#begin('~/.local/share/nvim/plugged')
   Plug 'scrooloose/nerdtree'
   Plug 'vim-airline/vim-airline'
   Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
-  Plug 'neoclide/coc-tsserver', {'do': 'yarn install --frozen-lockfile'}
+  Plug 'nvim-treesitter/nvim-treesitter'
   let g:coc_global_extensions = [
+      \ 'coc-rust-analyzer',
       \ 'coc-sh',
       \ 'coc-json',
-      \ 'coc-eslint',
       \ 'coc-highlight',
       \ 'coc-docker',
       \]
@@ -78,4 +78,19 @@ nnoremap <silent> <Leader>d :call CocActionAsync("jumpDefinition", "tab drop")<C
 " Binding of comments
 nnoremap <C-\> :call nerdcommenter#Comment(0,"toggle")<CR>                                                                  
 vnoremap <C-\> :call nerdcommenter#Comment(0,"toggle")<CR>
+
+" Treesitter configuration for code folding
+set foldmethod=expr
+set foldexpr=nvim_treesitter#foldexpr()  " Use Treesitter for folding
+set foldlevel=99  " Ensure all folds are open by default
+set foldenable  " Enable folding
+
+lua << EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = { "rust", "javascript", "python", "lua" },  -- Add other languages if needed
+  highlight = { enable = true },  -- Enable syntax highlighting
+  indent = { enable = true },  -- Enable automatic indentation
+  fold = { enable = true }  -- Enable code folding
+}
+EOF
 
