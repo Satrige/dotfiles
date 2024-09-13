@@ -18,6 +18,8 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
 
+local wasMutted = false
+
 local keyboard_layout = require("keyboard_layout")
 
 -- Keyboard layout
@@ -417,7 +419,39 @@ clientkeys = gears.table.join(
             c.maximized_horizontal = not c.maximized_horizontal
             c:raise()
         end ,
-        {description = "(un)maximize horizontally", group = "client"})
+        {description = "(un)maximize horizontally", group = "client"}),
+
+    -- Decrease volume
+    awful.key({ }, "XF86AudioLowerVolume",
+        function ()
+          if wasMutted then
+            wasMutted = false
+            awful.util.spawn("mixer vol=0")
+          else
+            awful.util.spawn("mixer vol=-5%")
+          end
+        end,
+        {description = "decrease volume", group = "custom"}),
+
+    -- Increase volume
+    awful.key({ }, "XF86AudioRaiseVolume", function ()
+      if wasMutted then
+        wasMutted = false
+        awful.util.spawn("mixer vol=0")
+      else
+        awful.util.spawn("mixer vol=+5%")
+      end
+    end, {description = "increase volume", group = "custom"}),
+
+    -- Mute/Unmute volume
+    awful.key({ }, "XF86AudioMute", function ()
+      wasMutted = not wasMutted
+      if wasMutted then
+        awful.util.spawn("mixer vol=55%")
+      else
+        awful.util.spawn("mixer vol=0")
+      end
+    end, {description = "mute volume", group = "custom"})
 )
 
 -- Bind all key numbers to tags.
