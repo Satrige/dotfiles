@@ -1,0 +1,13 @@
+[window]
+opacity = 0.8
+
+[font]
+# Font family to use
+normal = { family = "JetBrains Mono", style = "Regular" }
+bold = { family = "JetBrains Mono", style = "Bold" }
+italic = { family = "JetBrains Mono", style = "Italic" }
+bold_italic = { family = "JetBrains Mono", style = "Bold Italic" }
+
+# Font size in points
+size = 12.0
+
