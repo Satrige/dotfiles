@@ -1,6 +1,6 @@
 export ZSH="$HOME/.oh-my-zsh"
 
-ZSH_THEME="agnoster"
+ZSH_THEME="robbyrussell"
 
 CASE_SENSITIVE="true"
 
@@ -8,31 +8,30 @@ plugins=(
   git
   docker
   docker-compose
-  # kubectl
   zsh-autosuggestions
   zsh-completions
-  # zsh-kubectl-prompt
+  kubectl
 )
+
+alias vim="nvim"
 
 source $ZSH/oh-my-zsh.sh
 
-# Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='vim'
-else
-  export EDITOR='nvim'
-fi
+alias d=docker
+alias dc="docker compose"
+alias k=kubectl
 
-# Aliases
-alias vim="nvim"
-# alias k="kubectl"
-
+# tippspiel aliases
+alias use-staging-kube="export KUBECONFIG=~/.k8s/tippspiel-k8s-kubeconfig.yml"
+alias ks="kubectl -n tippspiel-staging"
+alias kp="kubectl -n tippspiel-production"
+                                                                                                                            
 ## git aliases                                                                                                              
-alias gs="git status"
-alias grb="git rebase origin/master"
-alias gp="git push origin"
-alias gpf="git push --force origin"
-alias gco="git checkout"
+alias gs="git status"                                                                                                       
+alias grb="git rebase origin/master"                                                                                        
+alias gp="git push origin"                                                                                                  
+alias gpf="git push --force origin"                                                                                         
+alias gco="git checkout"                                                                                                    
 alias gcm="git commit -m"
 
 git_create_branch() {
@@ -51,15 +50,21 @@ alias gcb="git_create_branch"
 git_push_current_branch() {
     # Get the current branch name
     branch_name=$(git rev-parse --abbrev-ref HEAD)
-
+    
     # Push the current branch with the -u flag
     git push -u origin "$branch_name"
 }
 
 alias gpuo="git_push_current_branch"
 
-# source <(kubectl completion zsh)
-
-# RPROMPT='%{$fg[blue]%}($ZSH_KUBECTL_PROMPT)%{$reset_color%}'
+source <(kubectl completion zsh)
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+PATH="/opt/homebrew/bin:$PATH"
+export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+eval "$(oh-my-posh init zsh --config $(brew --prefix oh-my-posh)/themes/amro.omp.json)"

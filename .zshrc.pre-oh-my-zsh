@@ -1,0 +1,52 @@
+export ZSH="$HOME/.oh-my-zsh"                                                                                               
+                                                                                                                            
+ZSH_THEME="robbyrobins"                                                                                                        
+                                                                                                                            
+CASE_SENSITIVE="true"                                                                                                       
+                                                                                                                            
+plugins=(                                                                                                                   
+  git
+  docker
+  docker-compose
+  zsh-autosuggestions                                                                                                       
+  zsh-completions                                                                                                           
+)                                                                                                                           
+
+source $ZSH/oh-my-zsh.sh
+                                                                                                                            
+# Preferred editor for local and remote sessions
+
+# Aliases                                                                                                                   
+
+## git aliases                                                                                                              
+alias gs="git status"
+alias grb="git rebase origin/master"
+alias gp="git push origin"
+alias gpf="git push --force origin"
+alias gco="git checkout"
+alias gcm="git commit -m"
+
+git_create_branch() {
+    local branch_name="$1"
+    if [ -z "$branch_name" ]; then
+        echo "Usage: create_git_branch <branch_name>"
+        return 1
+    fi
+
+    git checkout -b "$branch_name"
+    git push --set-upstream origin "$branch_name"
+}
+
+alias gcb="git_create_branch"
+
+git_push_current_branch() {
+    # Get the current branch name
+    branch_name=$(git rev-parse --abbrev-ref HEAD)
+    
+    # Push the current branch with the -u flag
+    git push -u origin "$branch_name"
+}
+
+alias gpuo="git_push_current_branch"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

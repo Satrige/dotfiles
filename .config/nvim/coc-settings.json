@@ -1,3 +1,11 @@
 {
-  "coc.preferences.formatOnSaveFiletypes": ["rust"]
+  "languageserver": {
+    "yaml": {
+      "command": "yaml-language-server",
+      "filetypes": ["yaml"]
+    }
+  },
+  "tsserver.implicitProjectConfig.checkJs": true,
+  "javascript.validate.enable": true,
+  "typescript.preferences.importModuleSpecifier": "relative"
 }
