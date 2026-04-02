@@ -90,7 +90,7 @@ Plugins are installed automatically on first launch via lazy.nvim. No manual ste
 | LSP | nvim-lspconfig + mason.nvim |
 | Completion | nvim-cmp + LuaSnip |
 | File explorer | nvim-tree.lua |
-| Fuzzy finder | telescope.nvim |
+| Fuzzy finder / utilities | snacks.nvim (picker, dashboard, notifier, lazygit, terminal, indent guides, smooth scroll, word highlights, bufdelete) |
 | Statusline | lualine.nvim |
 | Comments | Comment.nvim |
 | Git | vim-fugitive, gitsigns.nvim |
