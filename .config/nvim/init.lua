@@ -30,6 +30,19 @@ vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.opt.foldlevel = 99
 vim.opt.foldenable = true
 
+-- Use indent-based folding for filetypes with limited treesitter fold support
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "sh", "bash", "zsh" },
+  callback = function()
+    vim.opt_local.foldmethod = "indent"
+  end,
+})
+
+-------------------------------------------------------------------------------
+-- General mappings
+-------------------------------------------------------------------------------
+vim.keymap.set("n", "<Leader>tc", ":tabclose<CR>", { silent = true })
+
 -------------------------------------------------------------------------------
 -- Clipboard mappings (preserved from old config)
 -------------------------------------------------------------------------------
@@ -65,6 +78,7 @@ require("lazy").setup({
       ensure_installed = {
         "rust", "javascript", "typescript", "python",
         "lua", "yaml", "go", "json", "bash", "dockerfile",
+        "markdown", "markdown_inline",
       },
     },
   },
@@ -197,6 +211,32 @@ require("lazy").setup({
       require("nvim-tree").setup({
         filters = { dotfiles = false },
         view = { width = 30 },
+        actions = {
+          open_file = {
+            quit_on_open = false,
+          },
+        },
+      })
+
+      -- Quit nvim when nvim-tree is the only remaining window
+      vim.api.nvim_create_autocmd("WinClosed", {
+        callback = function()
+          vim.schedule(function()
+            local wins = vim.api.nvim_list_wins()
+            local non_floating = {}
+            for _, w in ipairs(wins) do
+              if vim.api.nvim_win_get_config(w).relative == "" then
+                table.insert(non_floating, w)
+              end
+            end
+            if #non_floating == 1 then
+              local buf = vim.api.nvim_win_get_buf(non_floating[1])
+              if vim.bo[buf].filetype == "NvimTree" then
+                vim.cmd("quit")
+              end
+            end
+          end)
+        end,
       })
 
       -- Auto-open when launching nvim with a directory
@@ -214,17 +254,43 @@ require("lazy").setup({
     end,
   },
 
-  -- Fuzzy finder (telescope) --------------------------------------------------
+  -- Snacks (picker, dashboard, notifier, lazygit, terminal, and more) ----------
   {
-    "nvim-telescope/telescope.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    config = function()
-      local builtin = require("telescope.builtin")
-      vim.keymap.set("n", "<C-f>", builtin.git_files)      -- was: fzf git ls-files
-      vim.keymap.set("n", "<C-p>", builtin.find_files)      -- was: :Files
-      vim.keymap.set("n", "<Leader>f", builtin.live_grep)   -- was: :Rg
-      vim.keymap.set("n", "<Leader>F", builtin.grep_string) -- was: :Rg <cword>
-    end,
+    "folke/snacks.nvim",
+    priority = 1000,
+    lazy = false,
+    opts = {
+      picker   = { enabled = true },
+      dashboard = { enabled = true },
+      notifier  = { enabled = true },
+      lazygit   = { enabled = true },
+      terminal  = { enabled = true },
+      indent    = { enabled = true },
+      scroll    = { enabled = true },
+      words     = { enabled = true },   -- highlight word under cursor
+      bufdelete = { enabled = true },
+      zen       = { enabled = true },
+    },
+    keys = {
+      -- Picker: replaces telescope (same shortcuts as before)
+      { "<C-f>",      function() Snacks.picker.git_files() end,  desc = "Git files" },
+      { "<C-p>",      function() Snacks.picker.files() end,       desc = "Find files" },
+      { "<Leader>f",  function() Snacks.picker.grep() end,        desc = "Live grep" },
+      { "<Leader>F",  function() Snacks.picker.grep_word() end,   desc = "Grep word under cursor" },
+      -- Picker: extra pickers
+      { "<Leader>sb", function() Snacks.picker.buffers() end,     desc = "Buffers" },
+      { "<Leader>sc", function() Snacks.picker.commands() end,    desc = "Commands" },
+      { "<Leader>sk", function() Snacks.picker.keymaps() end,     desc = "Keymaps" },
+      { "<Leader>sd", function() Snacks.picker.diagnostics() end, desc = "Diagnostics" },
+      { "<Leader>ss", function() Snacks.picker.lsp_symbols() end, desc = "LSP symbols" },
+      { "<Leader>sr", function() Snacks.picker.resume() end,      desc = "Resume last picker" },
+      -- Lazygit
+      { "<Leader>gg", function() Snacks.lazygit() end,            desc = "Lazygit" },
+      -- Floating terminal
+      { "<Leader>tt", function() Snacks.terminal() end,           desc = "Toggle terminal" },
+      -- Zoom toggle (replaces :only)
+      { "<C-w>o",     function() Snacks.zen() end,                desc = "Toggle zoom (zen)" },
+    },
   },
 
   -- Statusline ----------------------------------------------------------------
@@ -246,6 +312,15 @@ require("lazy").setup({
       require("gitsigns").setup()
     end,
   },
+  {
+    "sindrets/diffview.nvim",
+    cmd = { "DiffviewOpen", "DiffviewFileHistory" },
+    keys = {
+      { "<Leader>gd", ":DiffviewOpen<CR>",        silent = true, desc = "Diff view (working tree)" },
+      { "<Leader>gh", ":DiffviewFileHistory %<CR>", silent = true, desc = "File git history" },
+    },
+    config = true,
+  },
 
   -- Comments ------------------------------------------------------------------
   {
@@ -263,6 +338,44 @@ require("lazy").setup({
   {
     "windwp/nvim-autopairs",
     event = "InsertEnter",
+    config = true,
+  },
+
+  -- Highlight current search match ------------------------------------------
+  {
+    "rktjmp/highlight-current-n.nvim",
+    keys = {
+      { "n", "<Plug>(highlight-current-n-n)", desc = "Next search match" },
+      { "N", "<Plug>(highlight-current-n-N)", desc = "Prev search match" },
+    },
+    config = function()
+      require("highlight_current_n").setup()
+    end,
+  },
+
+  -- Surround ------------------------------------------------------------------
+  {
+    "kylechui/nvim-surround",
+    event = "VeryLazy",
+    config = function()
+      require("nvim-surround").setup({
+        surrounds = {
+          ["C"] = {
+            add = function()
+              local lang = vim.fn.input("Language: ")
+              return { { "```" .. lang }, { "```" } }
+            end,
+          },
+        },
+      })
+    end,
+  },
+
+  -- Render Markdown -----------------------------------------------------------
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    ft = "markdown",
+    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
     config = true,
   },
 

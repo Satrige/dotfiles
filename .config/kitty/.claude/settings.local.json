@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(kitty --version)",
+      "Bash(kitty --debug-config)",
+      "Bash(kitty --help)",
+      "Bash(kitty +runpy:*)"
+    ]
+  }
+}
