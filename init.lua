@@ -30,6 +30,14 @@ vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.opt.foldlevel = 99
 vim.opt.foldenable = true
 
+-- Use indent-based folding for filetypes with limited treesitter fold support
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "sh", "bash", "zsh" },
+  callback = function()
+    vim.opt_local.foldmethod = "indent"
+  end,
+})
+
 -------------------------------------------------------------------------------
 -- Clipboard mappings (preserved from old config)
 -------------------------------------------------------------------------------
