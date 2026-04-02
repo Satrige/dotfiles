@@ -64,45 +64,42 @@ curl -LO https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep_
 sudo dpkg -i ripgrep_13.0.0_amd64.deb
 ```
 
-## Install the Vim-plug Plugin Manager ([full link](https://www.linode.com/docs/guides/how-to-install-neovim-and-plugins-with-vim-plug/))
+## Neovim
 
-To make it easier to install plugins, use the Vim-plug plugin manager. This plugin manager uses git to manage most plugins:
+Requires **Neovim 0.11+**. The config is written in Lua (`.config/nvim/init.lua`) and uses [lazy.nvim](https://github.com/folke/lazy.nvim) as the plugin manager (auto-bootstrapped on first launch).
 
-`curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim`
-
-## Instal the latest version of neovim
+### Install Neovim
 
 ```sh
-$ sudo add-apt-repository ppa:neovim-ppa/stable
-$ sudo apt-get update
-$ sudo apt-get install neovim
+# macOS
+brew install neovim
+
+# Ubuntu / Debian
+sudo add-apt-repository ppa:neovim-ppa/stable
+sudo apt-get update
+sudo apt-get install neovim
 ```
 
-## Install NeoVim Plugins
-### Nvim-completion-manager Plugin
+### Plugins
 
-nvim-completion-manager is a fast, extensible completion framework that supports a variety of programming languages and snippet solutions. Some of these are supported out of the box, while others require the installation of extra Python 3 modules to work. In this guide we illustrate the use of this plugin with UltiSnips, a robust snippet solution.
+Plugins are installed automatically on first launch via lazy.nvim. No manual steps required.
 
-1. Install the NeoVim Python module:
+| Category | Plugin |
+|---|---|
+| Plugin manager | lazy.nvim |
+| LSP | nvim-lspconfig + mason.nvim |
+| Completion | nvim-cmp + LuaSnip |
+| File explorer | nvim-tree.lua |
+| Fuzzy finder | telescope.nvim |
+| Statusline | lualine.nvim |
+| Comments | Comment.nvim |
+| Git | vim-fugitive, gitsigns.nvim |
+| Colorscheme | tokyonight.nvim |
+| Other | nvim-autopairs, which-key.nvim, nvim-treesitter |
 
-`pip3 install --user neovim`
+### LSP servers
 
-2. Add the following lines at the bottom of your ~/.config/nvim/init.vim file to include the snippets available through UltiSnips and vim-snippets:
+The following LSP servers are auto-installed via Mason on first launch:
 
-```
-call plug#begin()
-Plug 'roxma/nvim-completion-manager'
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
-call plug#end()
-```
-
-3. Launch nvim, execute `PlugInstall`, update the plugins, and exit:
-
-```
-nvim
-:PlugInstall
-:UpdateRemotePlugins
-:q!
-```
+rust-analyzer, typescript, gopls, pyright, lua, json, yaml, bash, dockerfile
 
