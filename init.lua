@@ -65,6 +65,7 @@ require("lazy").setup({
       ensure_installed = {
         "rust", "javascript", "typescript", "python",
         "lua", "yaml", "go", "json", "bash", "dockerfile",
+        "markdown", "markdown_inline",
       },
     },
   },
@@ -255,6 +256,7 @@ require("lazy").setup({
       scroll    = { enabled = true },
       words     = { enabled = true },   -- highlight word under cursor
       bufdelete = { enabled = true },
+      zen       = { enabled = true },
     },
     keys = {
       -- Picker: replaces telescope (same shortcuts as before)
@@ -273,6 +275,8 @@ require("lazy").setup({
       { "<Leader>gg", function() Snacks.lazygit() end,            desc = "Lazygit" },
       -- Floating terminal
       { "<Leader>tt", function() Snacks.terminal() end,           desc = "Toggle terminal" },
+      -- Zoom toggle (replaces :only)
+      { "<C-w>o",     function() Snacks.zen() end,                desc = "Toggle zoom (zen)" },
     },
   },
 
@@ -312,6 +316,44 @@ require("lazy").setup({
   {
     "windwp/nvim-autopairs",
     event = "InsertEnter",
+    config = true,
+  },
+
+  -- Highlight current search match ------------------------------------------
+  {
+    "rktjmp/highlight-current-n.nvim",
+    keys = {
+      { "n", "<Plug>(highlight-current-n-n)", desc = "Next search match" },
+      { "N", "<Plug>(highlight-current-n-N)", desc = "Prev search match" },
+    },
+    config = function()
+      require("highlight_current_n").setup()
+    end,
+  },
+
+  -- Surround ------------------------------------------------------------------
+  {
+    "kylechui/nvim-surround",
+    event = "VeryLazy",
+    config = function()
+      require("nvim-surround").setup({
+        surrounds = {
+          ["C"] = {
+            add = function()
+              local lang = vim.fn.input("Language: ")
+              return { { "```" .. lang }, { "```" } }
+            end,
+          },
+        },
+      })
+    end,
+  },
+
+  -- Render Markdown -----------------------------------------------------------
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    ft = "markdown",
+    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
     config = true,
   },
 

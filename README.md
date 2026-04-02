@@ -90,16 +90,26 @@ Plugins are installed automatically on first launch via lazy.nvim. No manual ste
 | LSP | nvim-lspconfig + mason.nvim |
 | Completion | nvim-cmp + LuaSnip |
 | File explorer | nvim-tree.lua |
-| Fuzzy finder / utilities | snacks.nvim (picker, dashboard, notifier, lazygit, terminal, indent guides, smooth scroll, word highlights, bufdelete) |
+| Fuzzy finder / utilities | snacks.nvim (picker, dashboard, notifier, lazygit, terminal, indent guides, smooth scroll, word highlights, bufdelete, zen) |
 | Statusline | lualine.nvim |
 | Comments | Comment.nvim |
 | Git | vim-fugitive, gitsigns.nvim |
 | Colorscheme | tokyonight.nvim |
+| Markdown | render-markdown.nvim (loads for `*.md` files and renders headings, code blocks, checkboxes, tables, and quotes in-buffer) |
+| Search | highlight-current-n.nvim (`n` / `N` highlight the active search match) |
+| Surround | nvim-surround (`ys`, `ds`, `cs`; custom `C` surround wraps text in Markdown fenced code blocks with a language prompt) |
 | Other | nvim-autopairs, which-key.nvim, nvim-treesitter |
+
+### Notable keybindings
+
+`<C-w>o` toggles Snacks zen mode (window zoom) instead of running one-way `:only`.
+
+### Treesitter
+
+Treesitter parsers are installed automatically, including `markdown` and `markdown_inline` for Markdown editing and rendering support.
 
 ### LSP servers
 
 The following LSP servers are auto-installed via Mason on first launch:
 
 rust-analyzer, typescript, gopls, pyright, lua, json, yaml, bash, dockerfile
-
