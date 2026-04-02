@@ -62,11 +62,12 @@ require("lazy").setup({
 
   -- Colorscheme ---------------------------------------------------------------
   {
-    "folke/tokyonight.nvim",
+    "neanias/everforest-nvim",
     lazy = false,
     priority = 1000,
     config = function()
-      vim.cmd.colorscheme("tokyonight-night")
+      require("everforest").setup({})
+      vim.cmd.colorscheme("everforest")
     end,
   },
 
@@ -77,7 +78,7 @@ require("lazy").setup({
     opts = {
       ensure_installed = {
         "rust", "javascript", "typescript", "python",
-        "lua", "yaml", "go", "json", "bash", "dockerfile",
+        "lua", "yaml", "go", "json", "bash", "groovy", "dockerfile",
         "markdown", "markdown_inline",
       },
     },
@@ -299,7 +300,7 @@ require("lazy").setup({
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
       require("lualine").setup({
-        options = { theme = "tokyonight" },
+        options = { theme = "everforest" },
       })
     end,
   },
