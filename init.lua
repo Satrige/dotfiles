@@ -39,6 +39,11 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 -------------------------------------------------------------------------------
+-- General mappings
+-------------------------------------------------------------------------------
+vim.keymap.set("n", "<Leader>tc", ":tabclose<CR>", { silent = true })
+
+-------------------------------------------------------------------------------
 -- Clipboard mappings (preserved from old config)
 -------------------------------------------------------------------------------
 vim.keymap.set("v", "<Leader>y", '"+y')
@@ -306,6 +311,15 @@ require("lazy").setup({
     config = function()
       require("gitsigns").setup()
     end,
+  },
+  {
+    "sindrets/diffview.nvim",
+    cmd = { "DiffviewOpen", "DiffviewFileHistory" },
+    keys = {
+      { "<Leader>gd", ":DiffviewOpen<CR>",        silent = true, desc = "Diff view (working tree)" },
+      { "<Leader>gh", ":DiffviewFileHistory %<CR>", silent = true, desc = "File git history" },
+    },
+    config = true,
   },
 
   -- Comments ------------------------------------------------------------------
