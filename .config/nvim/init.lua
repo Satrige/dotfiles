@@ -54,6 +54,12 @@ vim.keymap.set("n", "<Leader>p", '"+p')
 vim.keymap.set("n", "<Leader>P", '"+P')
 vim.keymap.set("v", "<Leader>p", '"+p')
 vim.keymap.set("v", "<Leader>P", '"+P')
+vim.keymap.set("n", "<Leader>cp", function()
+  vim.fn.setreg("+", vim.fn.expand("%"))
+end, { desc = "Copy relative file path to clipboard" })
+vim.keymap.set("n", "<Leader>cP", function()
+  vim.fn.setreg("+", vim.fn.expand("%:p"))
+end, { desc = "Copy absolute file path to clipboard" })
 
 -------------------------------------------------------------------------------
 -- Plugins
