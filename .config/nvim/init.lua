@@ -280,7 +280,7 @@ require("lazy").setup({
     },
     keys = {
       -- Picker: replaces telescope (same shortcuts as before)
-      { "<C-f>",      function() Snacks.picker.git_files() end,  desc = "Git files" },
+      { "<C-f>",      function() Snacks.picker.git_files({ untracked = true }) end,  desc = "Git files" },
       { "<C-p>",      function() Snacks.picker.files() end,       desc = "Find files" },
       { "<Leader>f",  function() Snacks.picker.grep() end,        desc = "Live grep" },
       { "<Leader>F",  function() Snacks.picker.grep_word() end,   desc = "Grep word under cursor" },
