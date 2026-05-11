@@ -216,7 +216,10 @@ require("lazy").setup({
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
       require("nvim-tree").setup({
-        filters = { dotfiles = false },
+        filters = {
+          dotfiles = false,
+          git_ignored = false,
+        },
         view = { width = 30 },
         actions = {
           open_file = {
@@ -280,7 +283,7 @@ require("lazy").setup({
     },
     keys = {
       -- Picker: replaces telescope (same shortcuts as before)
-      { "<C-f>",      function() Snacks.picker.git_files({ untracked = true }) end,  desc = "Git files" },
+      { "<C-f>",      function() Snacks.picker.files({ hidden = true, ignored = true }) end, desc = "Find files" },
       { "<C-p>",      function() Snacks.picker.files() end,       desc = "Find files" },
       { "<Leader>f",  function() Snacks.picker.grep() end,        desc = "Live grep" },
       { "<Leader>F",  function() Snacks.picker.grep_word() end,   desc = "Grep word under cursor" },
