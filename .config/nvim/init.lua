@@ -261,6 +261,16 @@ require("lazy").setup({
 
       vim.keymap.set("n", "<Leader>nf", ":NvimTreeFindFile<CR>", { silent = true })
       vim.keymap.set("n", "<Leader>nt", ":NvimTreeToggle<CR>", { silent = true })
+
+      -- Live grep within the folder under the cursor in nvim-tree
+      local api = require("nvim-tree.api")
+      vim.keymap.set("n", "<Leader>ng", function()
+        local node = api.tree.get_node_under_cursor()
+        if not node then return end
+        local path = node.type == "directory" and node.absolute_path
+          or vim.fn.fnamemodify(node.absolute_path, ":h")
+        Snacks.picker.grep({ dirs = { path } })
+      end, { desc = "Grep in folder under cursor (nvim-tree)" })
     end,
   },
 
