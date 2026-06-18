@@ -405,4 +405,21 @@ require("lazy").setup({
     event = "VeryLazy",
     config = true,
   },
+
+  -- Formatting (conform) ------------------------------------------------------
+  {
+    "stevearc/conform.nvim",
+    event = "BufWritePre",
+    config = function()
+      require("conform").setup({
+        formatters_by_ft = {
+          go = { "goimports", "gofmt" },
+        },
+        format_on_save = {
+          timeout_ms = 500,
+          lsp_fallback = true,
+        },
+      })
+    end,
+  },
 })
