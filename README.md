@@ -66,21 +66,69 @@ sudo dpkg -i ripgrep_13.0.0_amd64.deb
 
 ## Neovim
 
-Requires **Neovim 0.11+**. The config is written in Lua (`.config/nvim/init.lua`) and uses [lazy.nvim](https://github.com/folke/lazy.nvim) as the plugin manager (auto-bootstrapped on first launch).
+The config requires **Neovim 0.12+**. It is written in Lua at
+`.config/nvim/init.lua` and uses
+[lazy.nvim](https://github.com/folke/lazy.nvim) as the plugin manager.
 
-### Install Neovim
+### Install on macOS
 
 ```sh
-# macOS
-brew install neovim
-
-# Ubuntu / Debian
-sudo add-apt-repository ppa:neovim-ppa/stable
-sudo apt-get update
-sudo apt-get install neovim
+brew install neovim tree-sitter-cli ripgrep fd lazygit
 ```
 
-### Plugins
+The tools are used as follows:
+
+- `tree-sitter-cli` and Apple Clang build Treesitter parsers;
+- `ripgrep` and `fd` power file and text search;
+- `lazygit` is opened by the Snacks Git view.
+
+Git, `curl`, and `tar` are also required. macOS provides them after the Command
+Line Tools are installed:
+
+```sh
+xcode-select --install
+```
+
+### Start Neovim
+
+Put this repository's `.config/nvim` directory at `~/.config/nvim`, then run:
+
+```sh
+nvim
+```
+
+On the first launch, lazy.nvim installs the plugins, Mason installs the
+configured language servers, and Treesitter installs its parsers. Wait for the
+jobs to finish before restarting Neovim.
+
+### Update and check the setup
+
+Update plugins first:
+
+```vim
+:Lazy sync
+```
+
+Restart Neovim, then update the parsers and Mason registry:
+
+```vim
+:TSUpdate
+:MasonUpdate
+:Mason
+```
+
+In Mason, press `C` to check for old packages and `U` to update them. Check the
+main parts of the setup with:
+
+```vim
+:checkhealth nvim-treesitter
+:checkhealth vim.lsp
+:checkhealth
+```
+
+`TSStatus` and `LspInfo` are not commands in this setup.
+
+### Main plugins
 
 Plugins are installed automatically on first launch via lazy.nvim. No manual steps required.
 
@@ -93,12 +141,12 @@ Plugins are installed automatically on first launch via lazy.nvim. No manual ste
 | Fuzzy finder / utilities | snacks.nvim (picker, dashboard, notifier, lazygit, terminal, indent guides, smooth scroll, word highlights, bufdelete, zen) |
 | Statusline | lualine.nvim |
 | Comments | Comment.nvim |
-| Git | vim-fugitive, gitsigns.nvim |
-| Colorscheme | tokyonight.nvim |
+| Git | vim-fugitive, gitsigns.nvim, diffview.nvim |
+| Colorscheme | everforest-nvim |
 | Markdown | render-markdown.nvim (loads for `*.md` files and renders headings, code blocks, checkboxes, tables, and quotes in-buffer) |
 | Search | highlight-current-n.nvim (`n` / `N` highlight the active search match) |
 | Surround | nvim-surround (`ys`, `ds`, `cs`; custom `C` surround wraps text in Markdown fenced code blocks with a language prompt) |
-| Other | nvim-autopairs, which-key.nvim, nvim-treesitter |
+| Other | nvim-autopairs, which-key.nvim, nvim-treesitter + treesitter-parser-registry |
 
 ### Notable keybindings
 
@@ -106,10 +154,22 @@ Plugins are installed automatically on first launch via lazy.nvim. No manual ste
 
 ### Treesitter
 
-Treesitter parsers are installed automatically, including `markdown` and `markdown_inline` for Markdown editing and rendering support.
+The following parsers are installed automatically:
+
+```text
+rust, javascript, typescript, python, lua, yaml, go, json, bash, groovy,
+dockerfile, markdown, markdown_inline, regex, terraform, hcl, tsx, html, css
+```
+
+Treesitter provides syntax highlighting and folds when a parser is available.
+Other file types use indent-based folds.
 
 ### LSP servers
 
 The following LSP servers are auto-installed via Mason on first launch:
 
-rust-analyzer, typescript, gopls, pyright, lua, json, yaml, bash, dockerfile
+```text
+rust-analyzer, typescript-language-server, gopls, pyright,
+lua-language-server, json-lsp, yaml-language-server,
+bash-language-server, dockerfile-language-server
+```

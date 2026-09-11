@@ -25,16 +25,29 @@ vim.opt.smarttab = true
 vim.opt.number = true
 vim.opt.colorcolumn = "120"
 vim.opt.signcolumn = "yes"
-vim.opt.foldmethod = "expr"
-vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.opt.foldlevel = 99
 vim.opt.foldenable = true
 
--- Use indent-based folding for filetypes with limited treesitter fold support
+-- Pick a fold method per buffer: treesitter when a parser is available,
+-- indent otherwise. This avoids "E490: No fold found" on filetypes whose
+-- treesitter parser is missing (or has limited fold support).
+local indent_fold_filetypes = { sh = true, bash = true, zsh = true }
+
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "sh", "bash", "zsh" },
-  callback = function()
-    vim.opt_local.foldmethod = "indent"
+  callback = function(args)
+    if indent_fold_filetypes[args.match] then
+      vim.opt_local.foldmethod = "indent"
+      return
+    end
+
+    local ok, parser = pcall(vim.treesitter.get_parser, args.buf)
+    if ok and parser then
+      vim.treesitter.start(args.buf)
+      vim.opt_local.foldmethod = "expr"
+      vim.opt_local.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+    else
+      vim.opt_local.foldmethod = "indent"
+    end
   end,
 })
 
@@ -80,14 +93,20 @@ require("lazy").setup({
   -- Treesitter ----------------------------------------------------------------
   {
     "nvim-treesitter/nvim-treesitter",
+    dependencies = {
+      "neovim-treesitter/treesitter-parser-registry",
+    },
+    lazy = false,
     build = ":TSUpdate",
-    opts = {
-      ensure_installed = {
+    config = function()
+      require("nvim-treesitter").install({
         "rust", "javascript", "typescript", "python",
         "lua", "yaml", "go", "json", "bash", "groovy", "dockerfile",
-        "markdown", "markdown_inline",
-      },
-    },
+        "markdown", "markdown_inline", "regex",
+        "terraform", "hcl",
+        "tsx", "html", "css",
+      })
+    end,
   },
 
   -- LSP -----------------------------------------------------------------------
@@ -149,8 +168,12 @@ require("lazy").setup({
           vim.keymap.set("n", "gi", vim.lsp.buf.implementation, buf)
           vim.keymap.set("n", "<Leader>rn", vim.lsp.buf.rename, buf)
           vim.keymap.set("n", "<Leader>ca", vim.lsp.buf.code_action, buf)
-          vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, buf)
-          vim.keymap.set("n", "]d", vim.diagnostic.goto_next, buf)
+          vim.keymap.set("n", "[d", function()
+            vim.diagnostic.jump({ count = -1, float = true })
+          end, buf)
+          vim.keymap.set("n", "]d", function()
+            vim.diagnostic.jump({ count = 1, float = true })
+          end, buf)
           vim.keymap.set("n", "<Leader>e", vim.diagnostic.open_float, buf)
         end,
       })
