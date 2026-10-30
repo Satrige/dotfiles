@@ -26,7 +26,18 @@ vim.opt.number = true
 vim.opt.colorcolumn = "120"
 vim.opt.signcolumn = "yes"
 vim.opt.foldlevel = 99
+vim.opt.foldlevelstart = 99
 vim.opt.foldenable = true
+
+-- Let Normal-mode commands work while the Russian keyboard layout is active.
+vim.opt.langmap = table.concat({
+  "йq,цw,уe,кr,еt,нy,гu,шi,щo,зp,х[,ъ]",
+  [[фa,ыs,вd,аf,пg,рh,оj,лk,дl,ж\;,э']],
+  [[яz,чx,сc,мv,иb,тn,ьm,б\,,ю.]],
+  "ЙQ,ЦW,УE,КR,ЕT,НY,ГU,ШI,ЩO,ЗP,Х{,Ъ}",
+  [[ФA,ЫS,ВD,АF,ПG,РH,ОJ,ЛK,ДL,Ж:,Э\"]],
+  "ЯZ,ЧX,СC,МV,ИB,ТN,ЬM,Б<,Ю>"
+}, ",")
 
 -- Pick a fold method per buffer: treesitter when a parser is available,
 -- indent otherwise. This avoids "E490: No fold found" on filetypes whose
@@ -48,6 +59,36 @@ vim.api.nvim_create_autocmd("FileType", {
     else
       vim.opt_local.foldmethod = "indent"
     end
+  end,
+})
+
+-- Format Go buffers with gofmt before writing them to disk.
+vim.api.nvim_create_autocmd("BufWritePre", {
+  callback = function(args)
+    if vim.bo[args.buf].filetype ~= "go" then return end
+
+    if vim.fn.executable("gofmt") == 0 then
+      vim.notify("gofmt is not available in PATH", vim.log.levels.WARN)
+      return
+    end
+
+    local lines = vim.api.nvim_buf_get_lines(args.buf, 0, -1, false)
+    local source = table.concat(lines, "\n")
+    if vim.bo[args.buf].endofline then source = source .. "\n" end
+
+    local result = vim.system({ "gofmt" }, { stdin = source, text = true }):wait()
+    if result.code ~= 0 then
+      vim.notify("gofmt failed: " .. (result.stderr or "unknown error"), vim.log.levels.WARN)
+      return
+    end
+    if result.stdout == source then return end
+
+    local formatted = vim.split(result.stdout, "\n", { plain = true })
+    if result.stdout:sub(-1) == "\n" then table.remove(formatted) end
+    local view = vim.fn.winsaveview()
+    vim.api.nvim_buf_set_lines(args.buf, 0, -1, false, formatted)
+    vim.bo[args.buf].endofline = result.stdout:sub(-1) == "\n"
+    vim.fn.winrestview(view)
   end,
 })
 
@@ -129,6 +170,7 @@ require("lazy").setup({
           "yamlls",
           "bashls",
           "dockerls",
+          "terraformls",
         },
       })
 
@@ -151,6 +193,7 @@ require("lazy").setup({
       vim.lsp.enable({
         "rust_analyzer", "ts_ls", "gopls", "pyright",
         "lua_ls", "jsonls", "yamlls", "bashls", "dockerls",
+        "terraformls",
       })
 
       -- LSP keybindings (activated when an LSP server attaches)
@@ -239,6 +282,8 @@ require("lazy").setup({
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
       require("nvim-tree").setup({
+        disable_netrw = true,
+        hijack_netrw = false,
         filters = {
           dotfiles = false,
           git_ignored = false,
@@ -427,22 +472,5 @@ require("lazy").setup({
     "folke/which-key.nvim",
     event = "VeryLazy",
     config = true,
-  },
-
-  -- Formatting (conform) ------------------------------------------------------
-  {
-    "stevearc/conform.nvim",
-    event = "BufWritePre",
-    config = function()
-      require("conform").setup({
-        formatters_by_ft = {
-          go = { "goimports", "gofmt" },
-        },
-        format_on_save = {
-          timeout_ms = 500,
-          lsp_fallback = true,
-        },
-      })
-    end,
   },
 })

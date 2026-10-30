@@ -1,28 +1,36 @@
 # dotfiles
 
 
-## Zsh plugins
+## Zsh
 
-### Install font for oh-my-zsh theme Agnoster
+### Install Oh My Zsh
 
-```
-sudo apt-get install fonts-powerline
-```
-
-[Full link](https://github.com/agnoster/agnoster-zsh-theme)
-
-### Install plugin zsh-completions
-
-
-Clone the repository inside your oh-my-zsh repo:
-```
-git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions
+```sh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ```
 
-Add it to FPATH in your .zshrc by adding the following line before source "$ZSH/oh-my-zsh.sh":
+### Install oh-my-posh
+
+The prompt comes from [oh-my-posh](https://ohmyposh.dev), not from the Oh My Zsh
+theme.
+
+```sh
+brew install jandedobbeleer/oh-my-posh/oh-my-posh
 ```
-fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
+
+`.zshrc` starts it with the `amro` theme that ships with the package, so this
+repository has no oh-my-posh config file:
+
+```sh
+eval "$(oh-my-posh init zsh --config $(brew --prefix oh-my-posh)/themes/amro.omp.json)"
 ```
+
+### Install the tools used by .zshrc
+
+- [nvm](https://github.com/nvm-sh/nvm#install--update-script): use the install
+  script, because `.zshrc` loads it from `~/.nvm`;
+- Go: `brew install go`. `~/go/bin` is on `PATH`;
+- `kubectl`: comes with Docker Desktop.
 
 ### Install plugin zsh-autosuggestions for zsh
 
@@ -35,34 +43,37 @@ plugins=(
 )
 ```
 
-### Install zsh-kubectl-prompt
-
-Clone the repo into oh-my-zsh custom plugins folder
-```
-git clone https://github.com/superbrothers/zsh-kubectl-prompt.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-kubectl-prompt
-```
-
-Configure your prompt (or check how to customize the theme plugin you are using)
-```
-RPROMPT='%{$fg[blue]%}($ZSH_KUBECTL_PROMPT)%{$reset_color%}'
-```
-
 
 ## Install search engines
 
 ### FZF
 
+```sh
+brew install fzf
+$(brew --prefix)/opt/fzf/install
 ```
-git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-~/.fzf/install
-```
+
+The install script writes `~/.fzf.zsh`, and `.zshrc` loads that file.
 
 ### Ripgrep
 
+```sh
+brew install ripgrep
 ```
-curl -LO https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep_13.0.0_amd64.deb
-sudo dpkg -i ripgrep_13.0.0_amd64.deb
+
+## Kitty
+
+```sh
+brew install --cask kitty
 ```
+
+Put this repository's `.config/kitty/kitty.conf` at `~/.config/kitty/kitty.conf`.
+It sets the Catppuccin Mocha colors, tabs, and splits (`Cmd+D`, `Cmd+Shift+D`,
+and `Cmd+Z` to zoom).
+
+The config asks for JetBrains Mono. If that font is not installed, kitty falls
+back to Menlo. Kitty ships its own Nerd Font symbols, so oh-my-posh icons work
+without an extra font.
 
 ## Neovim
 
@@ -73,14 +84,15 @@ The config requires **Neovim 0.12+**. It is written in Lua at
 ### Install on macOS
 
 ```sh
-brew install neovim tree-sitter-cli ripgrep fd lazygit
+brew install neovim tree-sitter-cli ripgrep fd lazygit go
 ```
 
 The tools are used as follows:
 
 - `tree-sitter-cli` and Apple Clang build Treesitter parsers;
 - `ripgrep` and `fd` power file and text search;
-- `lazygit` is opened by the Snacks Git view.
+- `lazygit` is opened by the Snacks Git view;
+- `go` provides `gofmt`, which formats Go files on save.
 
 Git, `curl`, and `tar` are also required. macOS provides them after the Command
 Line Tools are installed:
@@ -91,7 +103,9 @@ xcode-select --install
 
 ### Start Neovim
 
-Put this repository's `.config/nvim` directory at `~/.config/nvim`, then run:
+Copy this repository's `.config/nvim` directory to `~/.config/nvim`, then run the
+command below. The files are copied, not symlinked, so copy them again after you
+change them.
 
 ```sh
 nvim
@@ -152,6 +166,15 @@ Plugins are installed automatically on first launch via lazy.nvim. No manual ste
 
 `<C-w>o` toggles Snacks zen mode (window zoom) instead of running one-way `:only`.
 
+Normal-mode commands also work with the Russian keyboard layout, through
+`langmap`.
+
+### Formatting
+
+Go files are formatted with `gofmt` on save. This is a small autocmd in
+`init.lua`, not a plugin. If `gofmt` is not on `PATH`, Neovim shows a warning and
+saves the file without formatting.
+
 ### Treesitter
 
 The following parsers are installed automatically:
@@ -171,5 +194,5 @@ The following LSP servers are auto-installed via Mason on first launch:
 ```text
 rust-analyzer, typescript-language-server, gopls, pyright,
 lua-language-server, json-lsp, yaml-language-server,
-bash-language-server, dockerfile-language-server
+bash-language-server, dockerfile-language-server, terraform-ls
 ```
